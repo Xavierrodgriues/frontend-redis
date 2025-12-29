@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Seeker - Find Your Dream Job</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="logo">
+                <span class="logo-icon">🚀</span>
+                <h1>Job<span class="highlight">Seu</span></h1>
+            </div>
+            <p class="tagline">Explore thousands of remote and onsite opportunities.</p>
+        </header>
+
+        <main class="main-content">
+            <section class="search-section">
+                <div class="search-card">
+                    <form id="searchForm" class="search-form">
+                        <div class="input-group">
+                            <label for="role">Job Role</label>
+                            <input type="text" id="role" placeholder="e.g. Frontend Developer" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="experience">Experience Level</label>
+                            <div class="select-wrapper">
+                                <select id="experience" required>
+                                    <option value="" disabled selected>Select Experience</option>
+                                    <option value="0-1 years">Fresher (0-1 years)</option>
+                                    <option value="1-3 years">Junior (1-3 years)</option>
+                                    <option value="3-5 years">Mid-Level (3-5 years)</option>
+                                    <option value="5-10 years">Senior (5+ years)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" placeholder="e.g. United States" value="United States">
+                        </div>
+
+                        <button type="submit" class="search-btn">
+                            <span class="btn-text">Find Jobs</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h2 id="resultsTitle">Latest Opportunities</h2>
+                    <span class="badge" id="resultsCount">0 jobs found</span>
+                </div>
+                
+                <div id="loadingState" class="state-message hidden">
+                    <div class="spinner"></div>
+                    <p>Searching for the best roles...</p>
+                </div>
+
+                <div id="errorState" class="state-message hidden">
+                    <p class="error-text"></p>
+                </div>
+
+                <div id="emptyState" class="state-message hidden">
+                    <p>No jobs found. Try adjusting your search criteria.</p>
+                </div>
+
+                <div id="jobsGrid" class="jobs-grid">
+                    <!-- Job cards will be injected here -->
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
