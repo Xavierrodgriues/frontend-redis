@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Step 1: Request new valid job links
-            const requestResponse = await fetch('http://localhost:3000/api/v1/request-for-link', {
+            const requestResponse = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/request-for-link', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Wait for 2 seconds to allow some potential DB hits or cache
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            const searchResponse = await fetch(`http://localhost:3000/api/v1/search?role=${encodeURIComponent(role)}&experience=${encodeURIComponent(experience)}`);
+            const searchResponse = await fetch(`https://redis-jobseeker-backend.onrender.com/api/v1/search?role=${encodeURIComponent(role)}&experience=${encodeURIComponent(experience)}`);
 
             if (!searchResponse.ok) {
                 throw new Error('Failed to fetch jobs');
