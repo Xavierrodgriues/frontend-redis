@@ -23,7 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Step 1: Request new valid job links
-            const requestResponse = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/request-for-link', {
+            // const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
+            const API_BASE = 'http://localhost:3000';
+
+            const requestResponse = await fetch(`${API_BASE}/api/v1/request-for-link`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -47,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Wait for 2 seconds to allow some potential DB hits or cache
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            const searchResponse = await fetch(`https://redis-jobseeker-backend.onrender.com/api/v1/search?role=${encodeURIComponent(role)}&experience=${encodeURIComponent(experience)}`);
+            const searchResponse = await fetch(`${API_BASE}/api/v1/search?role=${encodeURIComponent(role)}&experience=${encodeURIComponent(experience)}`);
 
             if (!searchResponse.ok) {
                 throw new Error('Failed to fetch jobs');
@@ -118,4 +121,67 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
+
+    // --- Suggestion Logic ---
+    const roleInput = document.getElementById('role');
+
+    // Create suggestions container
+    const suggestionsBox = document.createElement('div');
+    suggestionsBox.className = 'suggestions-box';
+    roleInput.parentElement.style.position = 'relative'; // Ensure parent is relative
+    roleInput.parentElement.appendChild(suggestionsBox);
+
+    let debounceTimer;
+
+    roleInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        clearTimeout(debounceTimer);
+
+        if (query.length < 1) {
+            suggestionsBox.classList.remove('visible');
+            return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+            try {
+                // const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
+                const API_BASE = 'http://localhost:3000';
+                const response = await fetch(`${API_BASE}/api/v1/suggestions?query=${encodeURIComponent(query)}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    renderSuggestions(data.suggestions);
+                }
+            } catch (error) {
+                console.error('Error fetching suggestions:', error);
+            }
+        }, 300); // 300ms debounce
+    });
+
+    function renderSuggestions(suggestions) {
+        suggestionsBox.innerHTML = '';
+        if (!suggestions || suggestions.length === 0) {
+            suggestionsBox.classList.remove('visible');
+            return;
+        }
+
+        suggestions.forEach(role => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+            item.textContent = role;
+            item.addEventListener('click', () => {
+                roleInput.value = role;
+                suggestionsBox.classList.remove('visible');
+            });
+            suggestionsBox.appendChild(item);
+        });
+
+        suggestionsBox.classList.add('visible');
+    }
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!roleInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+            suggestionsBox.classList.remove('visible');
+        }
+    });
 });
