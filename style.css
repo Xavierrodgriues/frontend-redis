@@ -1,14 +1,25 @@
 :root {
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --bg-dark: #0f172a;
-    --bg-card: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --border: #334155;
-    --gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --glow: 0 0 20px rgba(99, 102, 241, 0.3);
+    /* Blue & White Theme */
+    --primary: #2563eb;
+    /* Blue 600 */
+    --primary-hover: #1d4ed8;
+    /* Blue 700 */
+    --bg-dark: #f8fafc;
+    /* Slate 50 - Main Background (Light) */
+    --bg-card: #ffffff;
+    /* White - Card Background */
+    --text-main: #0f172a;
+    /* Slate 900 - Main Text (Dark) */
+    --text-muted: #64748b;
+    /* Slate 500 - Muted Text */
+    --border: #cbd5e1;
+    /* Slate 300 - Borders */
+    --gradient: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+    /* Blue to Sky gradient */
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    /* Lighter shadow */
+    --glow: 0 0 20px rgba(37, 99, 235, 0.15);
+    /* Blue glow */
 }
 
 * {
