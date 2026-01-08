@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Step 1: Request new valid job links
             // const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
-            const API_BASE = 'http://localhost:3000';
+            const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
 
             const requestResponse = await fetch(`${API_BASE}/api/v1/request-for-link`, {
                 method: 'POST',
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         debounceTimer = setTimeout(async () => {
             try {
                 // const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
-                const API_BASE = 'http://localhost:3000';
+                const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
                 const response = await fetch(`${API_BASE}/api/v1/suggestions?query=${encodeURIComponent(query)}`);
                 if (response.ok) {
                     const data = await response.json();
