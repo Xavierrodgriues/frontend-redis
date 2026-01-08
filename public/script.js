@@ -132,6 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
     roleInput.parentElement.appendChild(suggestionsBox);
 
     let debounceTimer;
+    const suggestionsCache = new Map();
+    let currentRequestId = 0;
 
     roleInput.addEventListener('input', (e) => {
         const query = e.target.value.trim();
@@ -142,19 +144,47 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Check cache first
+        if (suggestionsCache.has(query)) {
+            renderSuggestions(suggestionsCache.get(query));
+            return;
+        }
+
+        // Increment request ID to track latest request
+        const requestId = ++currentRequestId;
+
+        // Show loading state immediately
+        suggestionsBox.innerHTML = '<div class="suggestion-loading">Loading...</div>';
+        suggestionsBox.classList.add('visible');
+
         debounceTimer = setTimeout(async () => {
+            // Check if this request is still relevant
+            if (requestId !== currentRequestId) return;
+
             try {
                 // const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
                 const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
                 const response = await fetch(`${API_BASE}/api/v1/suggestions?query=${encodeURIComponent(query)}`);
+
+                // Double check relevance after await
+                if (requestId !== currentRequestId) return;
+
                 if (response.ok) {
                     const data = await response.json();
+
+                    // Cache results
+                    suggestionsCache.set(query, data.suggestions);
+
                     renderSuggestions(data.suggestions);
                 }
             } catch (error) {
                 console.error('Error fetching suggestions:', error);
+
+                if (requestId === currentRequestId) {
+                    suggestionsBox.classList.remove('visible');
+                }
             }
-        }, 300); // 300ms debounce
+        }, 150); // Reduced to 150ms debounce
     });
 
     function renderSuggestions(suggestions) {
