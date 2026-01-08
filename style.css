@@ -42,25 +42,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-.logo h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: -0.05em;
-}
-
-.highlight {
-    background: var(--gradient);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.logo-icon {
-    font-size: 2.5rem;
+.main-logo-img {
+    height: 60px;
+    /* Adjust size as needed */
+    width: auto;
+    object-fit: contain;
 }
 
 .tagline {
