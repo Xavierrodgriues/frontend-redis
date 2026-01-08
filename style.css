@@ -378,6 +378,12 @@ body {
     margin-bottom: 0.5rem;
     line-height: 1.3;
     color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .job-meta {
