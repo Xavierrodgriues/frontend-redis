@@ -30,14 +30,17 @@
                         
                         <div class="input-group">
                             <label for="experience">Experience Level</label>
-                            <div class="select-wrapper">
-                                <select id="experience" required>
-                                    <option value="" disabled selected>Select Experience</option>
-                                    <!-- <option value="Entry Level">Fresher (0-1 years)</option> -->
-                                    <option value="Entry Level">Junior (1-3 years)</option>
-                                    <option value="Mid Level">Mid-Level (3-5 years)</option>
-                                    <option value="Senior Level">Senior (5+ years)</option>
-                                </select>
+                            <div class="custom-select-wrapper">
+                                <input type="hidden" id="experience" required>
+                                <div class="custom-select-trigger" id="experienceTrigger">
+                                    <span class="selected-value">Select Experience</span>
+                                    <span class="arrow">▼</span>
+                                </div>
+                                <div class="custom-options">
+                                    <div class="custom-option" data-value="Entry Level">Junior (1-3 years)</div>
+                                    <div class="custom-option" data-value="Mid Level">Mid-Level (3-5 years)</div>
+                                    <div class="custom-option" data-value="Senior Level">Senior (5+ years)</div>
+                                </div>
                             </div>
                         </div>
 

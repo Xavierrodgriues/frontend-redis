@@ -178,10 +178,51 @@ document.addEventListener('DOMContentLoaded', () => {
         suggestionsBox.classList.add('visible');
     }
 
-    // Close suggestions when clicking outside
+    // --- Custom Experience Dropdown Logic ---
+    const customSelectWrapper = document.querySelector('.custom-select-wrapper');
+    const customSelectTrigger = document.querySelector('.custom-select-trigger');
+    const customOptions = document.querySelectorAll('.custom-option');
+    const hiddenExperienceInput = document.getElementById('experience');
+    const selectedValueSpan = customSelectTrigger.querySelector('.selected-value');
+
+    // Toggle dropdown
+    customSelectTrigger.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent closing immediately
+        customSelectWrapper.classList.toggle('open');
+    });
+
+    // Handle option selection
+    customOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const value = option.getAttribute('data-value');
+            const text = option.textContent;
+
+            // Update hidden input
+            hiddenExperienceInput.value = value;
+
+            // Update trigger text and style
+            selectedValueSpan.textContent = text;
+            customSelectTrigger.classList.add('has-value');
+
+            // Handle visual selection state
+            customOptions.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+
+            // Close dropdown
+            customSelectWrapper.classList.remove('open');
+        });
+    });
+
+    // Close dropdowns when clicking outside
     document.addEventListener('click', (e) => {
+        // Close role suggestions
         if (!roleInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
             suggestionsBox.classList.remove('visible');
+        }
+
+        // Close experience dropdown
+        if (!customSelectWrapper.contains(e.target)) {
+            customSelectWrapper.classList.remove('open');
         }
     });
 });

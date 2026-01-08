@@ -219,10 +219,112 @@ body {
     /* Match input height roughly */
 }
 
-.search-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    box-shadow: var(--glow);
+/* Custom Select */
+.custom-select-wrapper {
+    position: relative;
+    user-select: none;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    color: var(--text-muted);
+    /* Placeholder color initially */
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+    height: 48px;
+    /* Match input height */
+}
+
+.custom-select-trigger.has-value {
+    color: var(--text-main);
+}
+
+.custom-select-trigger:hover {
+    border-color: var(--primary);
+}
+
+.custom-select-trigger .arrow {
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+    opacity: 0.7;
+}
+
+.custom-select-wrapper.open .custom-select-trigger {
+    border-color: var(--primary);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.custom-select-wrapper.open .arrow {
+    transform: rotate(180deg);
+}
+
+.custom-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+    box-shadow: var(--card-shadow);
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    margin-top: -1px;
+    /* Overlap border */
+}
+
+.custom-select-wrapper.open .custom-options {
+    display: block;
+}
+
+.custom-option {
+    padding: 0.85rem 1.25rem;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    border-left: 2px solid transparent;
+}
+
+.custom-option:hover,
+.custom-option.selected {
+    background: rgba(99, 102, 241, 0.08);
+    color: var(--primary);
+    border-left-color: var(--primary);
+    padding-left: 1.5rem;
+}
+
+/* Reusing scrollbar styles from suggestions box */
+.custom-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-options::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-options::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+.custom-options::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
 }
 
 /* Results Section */
