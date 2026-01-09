@@ -157,34 +157,46 @@ document.addEventListener('DOMContentLoaded', () => {
         suggestionsBox.innerHTML = '<div class="suggestion-loading">Loading...</div>';
         suggestionsBox.classList.add('visible');
 
-        debounceTimer = setTimeout(async () => {
-            // Check if this request is still relevant
-            if (requestId !== currentRequestId) return;
+        const SUPPORTED_ROLES = [
+            "Backend Engineer", "Frontend Engineer", "Full Stack Engineer", "Mobile Engineer", "Software Engineer",
+            "Platform Engineer", "Systems Engineer", "Embedded Systems Engineer", "UI UX",
+            "Cloud Engineer", "Cloud Architect", "DevOps Engineer", "Site Reliability Engineer (SRE)", "Infrastructure Engineer",
+            "Cloud Strategy Consultant", "Network Cloud Engineer",
+            "Security Engineer", "Cloud Security Engineer", "Application Security Engineer", "Network Security Engineer",
+            "Cyber Security Analyst", "GRC / Compliance Engineer", "IT Auditor", "FedRAMP / ATO Engineer", "Technology Risk Manager",
+            "Data Engineer", "Data Scientist", "Analytics Engineer", "Business Intelligence Engineer", "Machine Learning Engineer",
+            "AI Engineer", "Financial Analyst",
+            "QA Engineer", "Automation Test Engineer", "Performance Test Engineer", "Security Test Engineer", "Test Lead / QA Lead",
+            "IT Infrastructure Engineer", "IT Operations Engineer", "Linux / Unix Administrator", "Monitoring / SIEM Engineer",
+            "Observability Engineer", "Release / Configuration Manager", "Network Engineer",
+            "SAP Analyst", "ERP Consultant", "CRM Consultant", "ServiceNow Developer / Admin", "IT Asset / ITOM Engineer",
+            "Workday Analyst", "Salesforce Developer",
+            "Enterprise Architect", "Solutions Architect", "IT Manager", "CTO / CIO", "Product Manager", "Technical Product Manager",
+            "Project Manager", "Program Manager",
+            "Blockchain Engineer", "IoT Engineer", "Robotics Engineer", "AR / VR Engineer", "AML KYC", "Business Analyst"
+        ];
 
-            try {
-                // const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
-                const API_BASE = 'https://redis-jobseeker-backend.onrender.com';
-                const response = await fetch(`${API_BASE}/api/v1/suggestions?query=${encodeURIComponent(query)}`);
+        debounceTimer = setTimeout(() => {
+            const lowerQuery = query.toLowerCase();
 
-                // Double check relevance after await
-                if (requestId !== currentRequestId) return;
+            // Filter supported roles
+            const matches = SUPPORTED_ROLES.filter(role =>
+                role.toLowerCase().includes(lowerQuery)
+            );
 
-                if (response.ok) {
-                    const data = await response.json();
+            // Sort: exact startsWith matches first
+            matches.sort((a, b) => {
+                const aStarts = a.toLowerCase().startsWith(lowerQuery);
+                const bStarts = b.toLowerCase().startsWith(lowerQuery);
+                if (aStarts && !bStarts) return -1;
+                if (!aStarts && bStarts) return 1;
+                return 0;
+            });
 
-                    // Cache results
-                    suggestionsCache.set(query, data.suggestions);
-
-                    renderSuggestions(data.suggestions);
-                }
-            } catch (error) {
-                console.error('Error fetching suggestions:', error);
-
-                if (requestId === currentRequestId) {
-                    suggestionsBox.classList.remove('visible');
-                }
-            }
-        }, 150); // Reduced to 150ms debounce
+            const results = matches.slice(0, 10);
+            suggestionsCache.set(query, results);
+            renderSuggestions(results);
+        }, 50); // Fast debounce for local search
     });
 
     function renderSuggestions(suggestions) {
