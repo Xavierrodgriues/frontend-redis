@@ -41,7 +41,7 @@ const Register = ({ onLogin, onNavigate }) => {
   };
 
   return (
-    <div className="auth-container" style={{ maxWidth: '400px', margin: '2rem auto', padding: '2rem', background: 'white', borderRadius: '1rem', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}>
+    <div className="auth-container">
       <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
         <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '80px', borderRadius: '1rem' }} />
       </div>
@@ -79,7 +79,7 @@ const Register = ({ onLogin, onNavigate }) => {
           onChange={setRole} 
           onSelect={setRole} 
         />
-        <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '-0.5rem', marginBottom: '1rem' }}>
+        <div className="auth-helper-text">
           * Passwords are stored securely. You will only see jobs matching this role.
         </div>
 
