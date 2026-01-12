@@ -102,23 +102,24 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="main-header">
-        <div className="logo">
-          <img style={{ borderRadius: '1rem' }} src="yuvii-logo.jpeg" alt="Yuvii Logo" className="main-logo-img" />
+      <header className="app-navbar">
+        <div className="nav-brand">
+          <img src="yuvii-logo.jpeg" alt="Yuvii Logo" className="nav-logo" />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-          <p className="tagline">Explore thousands of remote and onsite opportunities.</p>
-          <div className="user-controls" style={{ fontSize: '0.9rem' }}>
-            <span style={{ marginRight: '1rem', fontWeight: '500' }}>Hello, {user?.role}</span>
-            <button 
-              onClick={handleLogout}
-              style={{ padding: '0.3rem 0.8rem', fontSize: '0.8rem', background: 'transparent', border: '1px solid #e5e7eb', borderRadius: '4px', cursor: 'pointer' }}
-            >
-              Logout
-            </button>
-          </div>
+        
+        <div className="user-nav">
+          <span className="user-greeting">
+            Hello, <span className="user-role-badge">{user?.role}</span>
+          </span>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
         </div>
       </header>
+
+      <div className="hero-section">
+        <h1 className="hero-tagline">Explore thousands of remote and onsite opportunities.</h1>
+      </div>
 
       <main className="main-content">
         <section className="search-section">

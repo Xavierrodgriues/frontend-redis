@@ -55,11 +55,77 @@ body {
 }
 
 /* Header */
-.main-header {
+/* Navigation Bar */
+.app-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* padding: 1rem 0; */
+    margin-bottom: 2rem;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-logo {
+    height: 50px;
+    width: auto;
+    border-radius: 0.5rem;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.user-greeting {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.user-role-badge {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.logout-btn {
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    padding: 0.4rem 1rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background: #fecaca;
+}
+
+/* Header/Hero */
+.hero-section {
     text-align: center;
-    margin-bottom: 3.5rem;
-    padding-top: 2rem;
+    margin-bottom: 3rem;
     animation: fadeInDown 0.8s ease-out;
+}
+
+.hero-tagline {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-top: 1rem;
 }
 
 .logo {
@@ -561,7 +627,8 @@ body {
     background: white;
     border-radius: 1rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    width: 90%; /* Ensure it doesn't overflow on small screens */
+    width: 90%;
+    /* Ensure it doesn't overflow on small screens */
 }
 
 .auth-container .input-group {
