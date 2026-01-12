@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import RoleSuggestions from './RoleSuggestions';
 
-const SearchForm = ({ onSearch, isSearching }) => {
-  const [role, setRole] = useState('');
+const SearchForm = ({ onSearch, isSearching, lockedRole }) => {
+  const [role, setRole] = useState(lockedRole || '');
   const [experience, setExperience] = useState('');
   const [location, setLocation] = useState('United States');
   const [sortBy, setSortBy] = useState('newest');
@@ -42,11 +42,23 @@ const SearchForm = ({ onSearch, isSearching }) => {
   return (
     <div className="search-card">
       <form id="searchForm" className="search-form" onSubmit={handleSubmit}>
-        <RoleSuggestions 
-          value={role} 
-          onChange={setRole} 
-          onSelect={setRole} 
-        />
+        {lockedRole ? (
+          <div className="input-group">
+            <label>Job Role (Locked)</label>
+            <input 
+              type="text" 
+              value={lockedRole} 
+              disabled 
+              style={{ background: '#f3f4f6', cursor: 'not-allowed', color: '#6b7280' }} 
+            />
+          </div>
+        ) : (
+          <RoleSuggestions 
+            value={role} 
+            onChange={setRole} 
+            onSelect={setRole} 
+          />
+        )}
         
         <div className="input-group">
           <label htmlFor="experience">Experience Level</label>
