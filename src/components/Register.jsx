@@ -2,8 +2,7 @@ import { useState } from 'react';
 import RoleSuggestions from './RoleSuggestions';
 
 const Register = ({ onLogin, onNavigate }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +22,7 @@ const Register = ({ onLogin, onNavigate }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password, role }),
+        body: JSON.stringify({ email, role }),
       });
 
       const data = await response.json();
@@ -51,26 +50,14 @@ const Register = ({ onLogin, onNavigate }) => {
 
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="reg-username">Username</label>
+          <label htmlFor="reg-email">Email Address</label>
           <input
-            type="text"
-            id="reg-username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            id="reg-email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="Choose a username"
-          />
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="reg-password">Password</label>
-          <input
-            type="password"
-            id="reg-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="Minimum 6 characters"
+            placeholder="Enter your email"
           />
         </div>
 
@@ -80,7 +67,7 @@ const Register = ({ onLogin, onNavigate }) => {
           onSelect={setRole} 
         />
         <div className="auth-helper-text">
-          * Passwords are stored securely. You will only see jobs matching this role.
+          * We will send an OTP to this email for login.
         </div>
 
         <button type="submit" className="search-btn" disabled={isLoading} style={{ width: '100%', marginTop: '0.5rem' }}>
