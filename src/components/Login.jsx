@@ -111,14 +111,9 @@ const Login = ({ onLogin, onNavigate }) => {
         </form>
       )}
 
+      {/* Registration Disabled */}
       <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
-        Don't have an account?{' '}
-        <span 
-          onClick={() => onNavigate('register')} 
-          style={{ color: '#2563eb', cursor: 'pointer', fontWeight: '500' }}
-        >
-          Register here
-        </span>
+        Don't have an account? Contact Admin.
       </div>
     </div>
   );
