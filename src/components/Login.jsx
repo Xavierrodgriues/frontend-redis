@@ -55,7 +55,8 @@ const Login = ({ onLogin, onNavigate }) => {
   };
 
   return (
-    <div className="auth-container">
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+      <div className="auth-container">
       <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
         <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '80px', borderRadius: '1rem' }} />
       </div>
@@ -114,6 +115,7 @@ const Login = ({ onLogin, onNavigate }) => {
       {/* Registration Disabled */}
       <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
         Don't have an account? Contact Admin.
+      </div>
       </div>
     </div>
   );
