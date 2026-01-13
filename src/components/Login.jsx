@@ -2,45 +2,20 @@ import { useState } from 'react';
 
 const Login = ({ onLogin, onNavigate }) => {
   const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [step, setStep] = useState(1); // 1 = Input Email, 2 = Input OTP
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendOtp = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/auth/send-otp', {
+      const response = await fetch('http://localhost:3000/api/v1/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to send OTP');
-
-      setStep(2);
-      // alert(data.message); // Optional feedback
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
@@ -64,8 +39,7 @@ const Login = ({ onLogin, onNavigate }) => {
       
       {error && <div className="error-message" style={{ background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', fontSize: '0.875rem' }}>{error}</div>}
 
-      {step === 1 ? (
-        <form onSubmit={handleSendOtp}>
+      <form onSubmit={handleLogin}>
           <div className="input-group">
             <label htmlFor="username">Email Address</label>
             <input
@@ -74,45 +48,25 @@ const Login = ({ onLogin, onNavigate }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="Enter your registered email"
+              placeholder="Enter your email"
             />
           </div>
-          <button type="submit" className="search-btn" disabled={isLoading} style={{ width: '100%', marginTop: '1rem' }}>
-            {isLoading ? 'Sending OTP...' : 'Get OTP'}
-          </button>
-        </form>
-      ) : (
-        <form onSubmit={handleVerifyOtp}>
-           <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#666', textAlign: 'center' }}>
-            OTP sent to <strong>{email}</strong> <br/>
-            <span 
-              onClick={() => setStep(1)} 
-              style={{ color: '#2563eb', cursor: 'pointer', fontSize: '0.8rem' }}
-            >
-              Change Email
-            </span>
-          </div>
-
           <div className="input-group">
-            <label htmlFor="otp">Enter OTP</label>
+            <label htmlFor="password">Password</label>
             <input
-              type="text"
-              id="otp"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="123456"
-              maxLength="6"
-              style={{ letterSpacing: '0.5em', textAlign: 'center', fontSize: '1.2rem' }}
+              placeholder="Enter your password"
             />
           </div>
           <button type="submit" className="search-btn" disabled={isLoading} style={{ width: '100%', marginTop: '1rem' }}>
-            {isLoading ? 'Verifying...' : 'Sign In'}
+            {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
-      )}
 
-      {/* Registration Disabled */}
       <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
         Don't have an account? Contact Admin.
       </div>

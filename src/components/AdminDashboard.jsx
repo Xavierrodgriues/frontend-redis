@@ -6,7 +6,7 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddUser, setShowAddUser] = useState(false);
-  const [newUser, setNewUser] = useState({ email: '', role: 'Software Engineer' });
+  const [newUser, setNewUser] = useState({ email: '', role: 'Software Engineer', password: '' });
   const navigate = useNavigate();
 
   // Hardcoded roles for now, or could fetch from server
@@ -50,7 +50,7 @@ function AdminDashboard() {
       
       alert('User created successfully');
       setShowAddUser(false);
-      setNewUser({ email: '', role: 'Software Engineer' });
+      setNewUser({ email: '', role: 'Software Engineer', password: '' });
       fetchUsers();
     } catch (err) {
       alert(err.message);
@@ -104,6 +104,17 @@ function AdminDashboard() {
                             value={newUser.email}
                             onChange={e => setNewUser({...newUser, email: e.target.value})}
                             style={{ padding: '8px', width: '250px' }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '5px' }}>Password</label>
+                        <input 
+                            type="text" 
+                            required 
+                            placeholder="Set Password"
+                            value={newUser.password}
+                            onChange={e => setNewUser({...newUser, password: e.target.value})}
+                            style={{ padding: '8px', width: '200px' }}
                         />
                     </div>
                     <div>
