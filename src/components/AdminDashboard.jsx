@@ -26,7 +26,7 @@ function AdminDashboard() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/v1/admin/users');
+      const res = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/admin/users');
       const data = await res.json();
       if (res.ok) setUsers(data.users);
       else throw new Error(data.error);
@@ -40,7 +40,7 @@ function AdminDashboard() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:3000/api/v1/admin/users', {
+      const res = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser)
@@ -60,7 +60,7 @@ function AdminDashboard() {
   const handleDeleteUser = async (email) => {
     if (!window.confirm(`Are you sure you want to delete ${email}?`)) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/admin/users/${email}`, {
+      const res = await fetch(`https://redis-jobseeker-backend.onrender.com/api/v1/admin/users/${email}`, {
         method: 'DELETE'
       });
       if (!res.ok) throw new Error('Failed to delete');

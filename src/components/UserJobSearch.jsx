@@ -39,7 +39,7 @@ function UserJobSearch() {
     
     try {
       // 1. Trigger Link Request
-      const API_BASE = 'http://localhost:3000'; 
+      const API_BASE = 'https://redis-jobseeker-backend.onrender.com'; 
       // Ensure userId is unique for this session/request
       const userId = user ? `user-${user.username}` : 'frontend-user-' + Date.now();
 
