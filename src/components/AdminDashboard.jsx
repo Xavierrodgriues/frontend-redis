@@ -40,7 +40,7 @@ function AdminDashboard() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/admin/users', {
+      const res = await fetch('http://localhost:3000/api/v1/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser)

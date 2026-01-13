@@ -14,7 +14,7 @@ function AdminLogin() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/admin/send-otp', {
+      const res = await fetch('http://localhost:3000/api/v1/admin/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -35,7 +35,7 @@ function AdminLogin() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/admin/verify-otp', {
+      const res = await fetch('http://localhost:3000/api/v1/admin/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp })
