@@ -42,7 +42,7 @@ const Register = ({ onLogin, onNavigate }) => {
   return (
     <div className="auth-container">
       <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '80px', borderRadius: '1rem' }} />
+        <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '140px', borderRadius: '1rem' }} />
       </div>
       <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#1a1a1a' }}>Create Account</h2>
       
