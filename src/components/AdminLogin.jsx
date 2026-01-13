@@ -43,7 +43,6 @@ function AdminLogin() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed');
 
-      // Save admin session
       localStorage.setItem('job_admin', JSON.stringify(data.admin));
       navigate('/admin/dashboard');
     } catch (err) {
@@ -54,50 +53,61 @@ function AdminLogin() {
   };
 
   return (
-    <div className="admin-login-container" style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Admin Panel Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
-      {step === 1 ? (
-        <form onSubmit={handleSendOtp}>
-          <div style={{ marginBottom: '15px' }}>
-            <label>Email Address</label>
-            <input 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
-              style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-            />
-          </div>
-          <button type="submit" disabled={loading} style={{ width: '100%', padding: '10px' }}>
-            {loading ? 'Sending...' : 'Send OTP'}
-          </button>
-        </form>
-      ) : (
-        <form onSubmit={handleVerifyOtp}>
-          <div style={{ marginBottom: '15px' }}>
-            <label>Enter OTP</label>
-            <input 
-              type="text" 
-              value={otp} 
-              onChange={(e) => setOtp(e.target.value)} 
-              required 
-              style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-            />
-          </div>
-          <button type="submit" disabled={loading} style={{ width: '100%', padding: '10px' }}>
-            {loading ? 'Verifying...' : 'Login'}
-          </button>
-          <button 
-            type="button" 
-            onClick={() => setStep(1)} 
-            style={{ width: '100%', padding: '10px', marginTop: '10px', background: '#ccc' }}
-          >
-            Back
-          </button>
-        </form>
-      )}
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+      <div className="auth-container">
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '80px', borderRadius: '1rem' }} />
+        </div>
+        <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#1a1a1a' }}>Admin Panel Login</h2>
+        
+        {error && <div className="error-message" style={{ background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', fontSize: '0.875rem' }}>{error}</div>}
+        
+        {step === 1 ? (
+          <form onSubmit={handleSendOtp}>
+            <div className="input-group">
+              <label>Email Address</label>
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+                placeholder="Enter admin email"
+              />
+            </div>
+            <button type="submit" className="search-btn" disabled={loading} style={{ width: '100%', marginTop: '1rem' }}>
+              {loading ? 'Sending...' : 'Send OTP'}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyOtp}>
+             <div style={{ marginBottom: '1rem', fontSize: '0.9rem', color: '#666', textAlign: 'center' }}>
+              OTP sent to <strong>{email}</strong> <br/>
+              <span 
+                onClick={() => setStep(1)} 
+                style={{ color: '#2563eb', cursor: 'pointer', fontSize: '0.8rem' }}
+              >
+                Change Email
+              </span>
+            </div>
+
+            <div className="input-group">
+              <label>Enter OTP</label>
+              <input 
+                type="text" 
+                value={otp} 
+                onChange={(e) => setOtp(e.target.value)} 
+                required 
+                placeholder="123456"
+                maxLength="6"
+                 style={{ letterSpacing: '0.5em', textAlign: 'center', fontSize: '1.2rem' }}
+              />
+            </div>
+            <button type="submit" className="search-btn" disabled={loading} style={{ width: '100%', marginTop: '1rem' }}>
+              {loading ? 'Verifying...' : 'Login'}
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }
