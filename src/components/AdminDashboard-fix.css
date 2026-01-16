@@ -1,0 +1,71 @@
+﻿/* Modal and Autocomplete Responsive Fixes */
+.modal-content {
+    background: white;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh !important;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-content form {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+    max-height: calc(90vh - 80px);
+}
+
+.autocomplete-suggestions {
+    position: absolute;
+    bottom: calc(100% + 0.5rem);
+    top: auto !important;
+    /* Force top to be auto so bottom works */
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    max-height: min(240px, 35vh) !important;
+    overflow-y: auto;
+    z-index: 100;
+    animation: slideUpMenu 0.2s ease-out;
+    transform-origin: bottom center;
+}
+
+@keyframes slideUpMenu {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-height: 700px) {
+    .autocomplete-suggestions {
+        max-height: 180px !important;
+    }
+}
+
+@media (max-height: 600px) {
+    .autocomplete-suggestions {
+        max-height: 140px !important;
+    }
+
+    .modal-content {
+        max-height: 95vh !important;
+    }
+}
+
+@media (max-height: 500px) {
+    .autocomplete-suggestions {
+        max-height: 120px !important;
+    }
+}
