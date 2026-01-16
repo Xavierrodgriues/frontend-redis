@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function AdminLogin() {
   const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
+  // Instead of a single string, we can still keep the single string state for validation,
+  // but we'll manage the 6 separate inputs via refs or local state for rendering.
+  // Actually, easiest is to map an array of 6 strings.
+  const [otp, setOtp] = useState(new Array(6).fill(""));
   
   // Steps: 
   // 1: Email Input
@@ -15,7 +18,22 @@ function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-const API_URL = import.meta.env.VITE_API_ORIGIN || 'http://localhost:3000';
+  const API_URL = import.meta.env.VITE_API_ORIGIN || 'http://localhost:3000';
+  const inputRefs = useRef([]);
+
+  // Helper to focus next or prev input
+  const focusInput = (index) => {
+      if (inputRefs.current[index]) {
+          inputRefs.current[index].focus();
+      }
+  };
+
+  // Auto-focus first input when step changes to OTP entry (Step 2 or 3)
+  useEffect(() => {
+    if ((step === 2 || step === 3) && inputRefs.current[0]) {
+      inputRefs.current[0].focus();
+    }
+  }, [step]);
 
   // Step 1: Check Email & Status
   const handleCheckEmail = async (e) => {
@@ -32,10 +50,8 @@ const API_URL = import.meta.env.VITE_API_ORIGIN || 'http://localhost:3000';
       if (!res.ok) throw new Error(data.error || 'Failed to check email');
       
       if (data.totpEnabled) {
-        // Assume user has setup, go to Verify step directly
         setStep(3);
       } else {
-        // User needs to setup TOTP
         await initiateSetup();
       }
     } catch (err) {
@@ -56,22 +72,28 @@ const API_URL = import.meta.env.VITE_API_ORIGIN || 'http://localhost:3000';
           if (!res.ok) throw new Error(data.error || 'Failed to start setup');
           
           setQrCode(data.qrCode);
-          setStep(2); // Go to Setup Step
+          setStep(2); 
     } catch (err) {
         setError(err.message);
     }
   }
 
-  // Step 2 & 3: Verify OTP (for both Setup confirmation and Login)
+  // Handle Verify
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
+    const token = otp.join("");
+    if (token.length !== 6) {
+        setError("Please enter all 6 digits");
+        return;
+    }
+
     setLoading(true);
     setError('');
     try {
       const res = await fetch(`${API_URL}/api/v1/admin/totp-verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, token: otp })
+        body: JSON.stringify({ email, token })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed');
@@ -84,6 +106,90 @@ const API_URL = import.meta.env.VITE_API_ORIGIN || 'http://localhost:3000';
       setLoading(false);
     }
   };
+
+  // OTP Input Handlers
+    const handleChange = (element, index) => {
+        let val = element.value;
+        // Ensure only numbers
+        if (!/^\d*$/.test(val)) return;
+        
+        // If content exists and new char entered, take the LAST char (overwrite behavior)
+        if (val.length > 1) {
+            val = val.slice(-1);
+        }
+        
+        const newOtp = [...otp];
+        newOtp[index] = val;
+        setOtp(newOtp);
+        
+        // Focus next input
+        if (val !== "" && index < 5) {
+            focusInput(index + 1);
+        }
+    };
+
+    const handleKeyDown = (e, index) => {
+        // Handle Backspace
+        if (e.key === "Backspace") {
+             if (otp[index] === "" && index > 0) {
+                 focusInput(index - 1);
+             }
+        } else if (e.key === "ArrowLeft" && index > 0) {
+            e.preventDefault();
+            focusInput(index - 1);
+        } else if (e.key === "ArrowRight" && index < 5) {
+            e.preventDefault();
+            focusInput(index + 1);
+        }
+    };
+    
+    const handlePaste = (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData("text").slice(0, 6);
+        if (!/^\d+$/.test(pastedData)) return; // Only digits
+
+        const newOtp = [...otp];
+        pastedData.split("").forEach((char, i) => {
+            if (i < 6) newOtp[i] = char;
+        });
+        setOtp(newOtp);
+        // Focus last filled index
+        focusInput(Math.min(pastedData.length, 5));
+    };
+
+
+  const renderOtpInputs = () => (
+      <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '1.5rem' }}>
+          {otp.map((data, index) => (
+              <input
+                  key={index}
+                  ref={el => inputRefs.current[index] = el}
+                  type="text"
+                  // maxLength removed to allow overwrite logic in handleChange
+                  value={data}
+                  onChange={e => handleChange(e.target, index)}
+                  onKeyDown={e => handleKeyDown(e, index)}
+                  onPaste={index === 0 ? handlePaste : undefined} // Allow paste on first box
+                  onClick={(e) => {}} // Remove selection
+                  style={{
+                      width: '40px',
+                      height: '48px',
+                      fontSize: '1.25rem',
+                      textAlign: 'center',
+                      borderRadius: '8px',
+                      border: '1px solid #ccc',
+                      outline: 'none',
+                      transition: 'border-color 0.2s',
+                      caretColor: 'transparent', // Hide cursor
+                  }}
+                  onFocus={(e) => {
+                      e.target.style.borderColor = '#2563eb';
+                  }}
+                  onBlur={(e) => e.target.style.borderColor = '#ccc'}
+              />
+          ))}
+      </div>
+  );
 
   const renderStep1 = () => (
     <form onSubmit={handleCheckEmail}>
@@ -112,19 +218,10 @@ const API_URL = import.meta.env.VITE_API_ORIGIN || 'http://localhost:3000';
           {qrCode && <img src={qrCode} alt="TOTP QR Code" style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '10px', marginBottom: '1rem' }} />}
           
           <form onSubmit={handleVerifyOtp}>
-            <div className="input-group">
-                <label>Enter 6-digit Code</label>
-                <input 
-                type="text" 
-                value={otp} 
-                onChange={(e) => setOtp(e.target.value)} 
-                required 
-                placeholder="123456"
-                maxLength="6"
-                style={{ letterSpacing: '0.5em', textAlign: 'center', fontSize: '1.2rem' }}
-                />
-            </div>
-            <button type="submit" className="search-btn" disabled={loading} style={{ width: '100%', marginTop: '1rem' }}>
+             <label style={{display:'block', marginBottom:'0.5rem', textAlign: 'left', fontWeight: '500'}}>Enter 6-digit Code</label>
+            {renderOtpInputs()}
+            
+            <button type="submit" className="search-btn" disabled={loading} style={{ width: '100%' }}>
                 {loading ? 'Verify & Enable' : 'Verify & Enable'}
             </button>
           </form>
@@ -143,19 +240,10 @@ const API_URL = import.meta.env.VITE_API_ORIGIN || 'http://localhost:3000';
         </span>
         </div>
 
-        <div className="input-group">
-        <label>Authenticator Code</label>
-        <input 
-            type="text" 
-            value={otp} 
-            onChange={(e) => setOtp(e.target.value)} 
-            required 
-            placeholder="123456"
-            maxLength="6"
-            style={{ letterSpacing: '0.5em', textAlign: 'center', fontSize: '1.2rem' }}
-        />
-        </div>
-        <button type="submit" className="search-btn" disabled={loading} style={{ width: '100%', marginTop: '1rem' }}>
+        <label style={{display:'block', marginBottom:'0.5rem', fontWeight: '500'}}>Authenticator Code</label>
+        {renderOtpInputs()}
+        
+        <button type="submit" className="search-btn" disabled={loading} style={{ width: '100%' }}>
         {loading ? 'Verifying...' : 'Login'}
         </button>
     </form>
