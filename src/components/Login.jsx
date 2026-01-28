@@ -12,7 +12,7 @@ const Login = ({ onLogin, onNavigate }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/auth/login', {
+      const response = await fetch('http://localhost:3000/api/v1/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -32,14 +32,14 @@ const Login = ({ onLogin, onNavigate }) => {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
       <div className="auth-container">
-      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '140px', borderRadius: '1rem' }} />
-      </div>
-      <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#1a1a1a' }}>Welcome Back</h2>
-      
-      {error && <div className="error-message" style={{ background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', fontSize: '0.875rem' }}>{error}</div>}
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '140px', borderRadius: '1rem' }} />
+        </div>
+        <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#1a1a1a' }}>Welcome Back</h2>
 
-      <form onSubmit={handleLogin}>
+        {error && <div className="error-message" style={{ background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', fontSize: '0.875rem' }}>{error}</div>}
+
+        <form onSubmit={handleLogin}>
           <div className="input-group">
             <label htmlFor="username">Email Address</label>
             <input
@@ -67,9 +67,9 @@ const Login = ({ onLogin, onNavigate }) => {
           </button>
         </form>
 
-      <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
-        Don't have an account? Contact Admin.
-      </div>
+        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
+          Don't have an account? Contact Admin.
+        </div>
       </div>
     </div>
   );

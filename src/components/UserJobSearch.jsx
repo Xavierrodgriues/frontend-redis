@@ -36,10 +36,10 @@ function UserJobSearch() {
     setError(null);
     setJobs([]);
     setHasSearched(true);
-    
+
     try {
       // 1. Trigger Link Request
-      const API_BASE = 'https://redis-jobseeker-backend.onrender.com'; 
+      const API_BASE = 'http://localhost:3000';
       // Ensure userId is unique for this session/request
       const userId = user ? `user-${user.username}` : 'frontend-user-' + Date.now();
 
@@ -70,7 +70,7 @@ function UserJobSearch() {
       });
 
       const searchRes = await fetch(`${API_BASE}/api/v1/search?${queryParams.toString()}`);
-      
+
       if (!searchRes.ok) {
         throw new Error('Failed to fetch job results');
       }
@@ -96,7 +96,7 @@ function UserJobSearch() {
         <div className="nav-brand">
           <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" className="nav-logo" />
         </div>
-        
+
         <div className="user-nav">
           <span className="user-greeting">
             Hello, <span className="user-role-badge">{user?.role}</span>
@@ -113,17 +113,17 @@ function UserJobSearch() {
 
       <main className="main-content">
         <section className="search-section">
-          <SearchForm 
-            onSearch={handleSearch} 
-            isSearching={loading} 
+          <SearchForm
+            onSearch={handleSearch}
+            isSearching={loading}
             lockedRole={user?.role}
           />
         </section>
 
-        <ResultsSection 
-          jobs={jobs} 
-          loading={loading} 
-          error={error} 
+        <ResultsSection
+          jobs={jobs}
+          loading={loading}
+          error={error}
           hasSearched={hasSearched}
         />
       </main>
