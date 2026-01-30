@@ -30,14 +30,22 @@ const Login = ({ onLogin, onNavigate }) => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-      <div className="auth-container">
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', padding: '1rem' }}>
+      <div style={{
+        background: '#ffffff',
+        borderRadius: '1rem',
+        border: '1px solid #e2e8f0',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        padding: '2rem',
+        width: '100%',
+        maxWidth: '380px'
+      }}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '140px', borderRadius: '1rem' }} />
+          <img src="/yuvii-logo.jpeg" alt="Yuvii Logo" style={{ width: '80px', borderRadius: '0.75rem' }} />
         </div>
-        <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#1a1a1a' }}>Welcome Back</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#0f172a', fontSize: '1.25rem', fontWeight: '600' }}>Welcome Back</h2>
 
-        {error && <div className="error-message" style={{ background: '#fee2e2', color: '#dc2626', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', fontSize: '0.875rem' }}>{error}</div>}
+        {error && <div style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', padding: '0.625rem 0.875rem', borderRadius: '0.5rem', marginBottom: '1rem', fontSize: '0.8rem' }}>{error}</div>}
 
         <form onSubmit={handleLogin}>
           <div className="input-group">
@@ -62,12 +70,12 @@ const Login = ({ onLogin, onNavigate }) => {
               placeholder="Enter your password"
             />
           </div>
-          <button type="submit" className="search-btn" disabled={isLoading} style={{ width: '100%', marginTop: '1rem' }}>
+          <button type="submit" className="search-btn" disabled={isLoading} style={{ width: '100%', marginTop: '0.5rem' }}>
             {isLoading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.9rem', color: '#666' }}>
+        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.8rem', color: '#64748b' }}>
           Don't have an account? Contact Admin.
         </div>
       </div>
