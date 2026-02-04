@@ -590,3 +590,107 @@ body {
         width: 95%;
     }
 }
+
+/* Jobs Pagination Styles */
+.jobs-pagination {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 0;
+    margin-top: 1rem;
+}
+
+.jobs-pagination .pagination-info {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.jobs-pagination .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.jobs-pagination .pagination-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.jobs-pagination .pagination-btn:hover:not(:disabled) {
+    background: var(--primary-50);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.jobs-pagination .pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.jobs-pagination .pagination-numbers {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.jobs-pagination .pagination-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.75rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.jobs-pagination .pagination-num:hover:not(.active) {
+    background: var(--bg-hover);
+    border-color: var(--border-hover);
+}
+
+.jobs-pagination .pagination-num.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.jobs-pagination .pagination-ellipsis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .jobs-pagination .pagination-numbers {
+        display: none;
+    }
+
+    .jobs-pagination .pagination-info {
+        text-align: center;
+        font-size: 0.8rem;
+    }
+}

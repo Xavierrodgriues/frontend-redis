@@ -10,7 +10,7 @@ function AdminDashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  
+
   // Form states
   const [newUser, setNewUser] = useState({
     email: '',
@@ -24,12 +24,23 @@ function AdminDashboard() {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalUsers: 0,
+    limit: 10,
+    hasNextPage: false,
+    hasPrevPage: false
+  });
+
   // Autocomplete states
   const [roleInput, setRoleInput] = useState('');
   const [showRoleSuggestions, setShowRoleSuggestions] = useState(false);
   const [editRoleInput, setEditRoleInput] = useState('');
   const [showEditRoleSuggestions, setShowEditRoleSuggestions] = useState(false);
-  
+
   const roleInputRef = useRef(null);
   const editRoleInputRef = useRef(null);
   const suggestionsRef = useRef(null);
@@ -50,7 +61,7 @@ function AdminDashboard() {
     'Systems Engineer',
     'Embedded Systems Engineer',
     'UI UX',
-    
+
     // Cloud & DevOps
     'Cloud Engineer',
     'Cloud Architect',
@@ -59,7 +70,7 @@ function AdminDashboard() {
     'Infrastructure Engineer',
     'Cloud Strategy Consultant',
     'Network Cloud Engineer',
-    
+
     // Security & Risk
     'Security Engineer',
     'Cloud Security Engineer',
@@ -70,7 +81,7 @@ function AdminDashboard() {
     'IT Auditor',
     'FedRAMP / ATO Engineer',
     'Technology Risk Manager',
-    
+
     // Data & AI
     'Data Engineer',
     'Data Scientist',
@@ -79,14 +90,14 @@ function AdminDashboard() {
     'Machine Learning Engineer',
     'AI Engineer',
     'Financial Analyst',
-    
+
     // QA & Testing
     'QA Engineer',
     'Automation Test Engineer',
     'Performance Test Engineer',
     'Security Test Engineer',
     'Test Lead / QA Lead',
-    
+
     // IT Operations
     'IT Infrastructure Engineer',
     'IT Operations Engineer',
@@ -95,7 +106,7 @@ function AdminDashboard() {
     'Observability Engineer',
     'Release / Configuration Manager',
     'Network Engineer',
-    
+
     // Enterprise Apps
     'SAP Analyst',
     'ERP Consultant',
@@ -104,7 +115,7 @@ function AdminDashboard() {
     'IT Asset / ITOM Engineer',
     'Workday Analyst',
     'Salesforce Developer',
-    
+
     // Architecture & Leadership
     'Enterprise Architect',
     'Solutions Architect',
@@ -114,7 +125,7 @@ function AdminDashboard() {
     'Technical Product Manager',
     'Project Manager',
     'Program Manager',
-    
+
     // Emerging Tech
     'Blockchain Engineer',
     'IoT Engineer',
@@ -136,12 +147,12 @@ function AdminDashboard() {
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) && 
-          roleInputRef.current && !roleInputRef.current.contains(event.target)) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target) &&
+        roleInputRef.current && !roleInputRef.current.contains(event.target)) {
         setShowRoleSuggestions(false);
       }
-      if (editSuggestionsRef.current && !editSuggestionsRef.current.contains(event.target) && 
-          editRoleInputRef.current && !editRoleInputRef.current.contains(event.target)) {
+      if (editSuggestionsRef.current && !editSuggestionsRef.current.contains(event.target) &&
+        editRoleInputRef.current && !editRoleInputRef.current.contains(event.target)) {
         setShowEditRoleSuggestions(false);
       }
     };
@@ -150,17 +161,28 @@ function AdminDashboard() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const fetchUsers = async (showLoading = false) => {
+  const fetchUsers = async (showLoading = false, page = currentPage) => {
     try {
       if (showLoading) setLoading(true);
-      const res = await fetch(`${API_URL}/api/v1/admin/users`);
+      const res = await fetch(`${API_URL}/api/v1/admin/users?page=${page}&limit=10`);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to fetch users');
       setUsers(data.users || []);
+      if (data.pagination) {
+        setPagination(data.pagination);
+        setCurrentPage(data.pagination.currentPage);
+      }
     } catch (err) {
       toast.error(err.message);
     } finally {
       if (showLoading) setLoading(false);
+    }
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setCurrentPage(newPage);
+      fetchUsers(false, newPage);
     }
   };
 
@@ -183,7 +205,7 @@ function AdminDashboard() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to add user');
-      
+
       toast.success('User added successfully!', { id: toastId });
       setNewUser({ email: '', password: '', role: '' });
       setRoleInput('');
@@ -219,7 +241,7 @@ function AdminDashboard() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update password');
-      
+
       toast.success('Password updated successfully!', { id: toastId });
       setShowPasswordModal(false);
       setPasswordData({ password: '', confirmPassword: '' });
@@ -236,7 +258,7 @@ function AdminDashboard() {
       toast.error('Please select a role');
       return;
     }
-    
+
     const toastId = toast.loading('Updating role...');
 
     try {
@@ -247,7 +269,7 @@ function AdminDashboard() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update role');
-      
+
       toast.success('Role updated successfully!', { id: toastId });
       setShowEditModal(false);
       setEditingUser(null);
@@ -271,7 +293,7 @@ function AdminDashboard() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to delete user');
-      
+
       toast.success('User deleted successfully!', { id: toastId });
       fetchUsers(false);
     } catch (err) {
@@ -322,7 +344,7 @@ function AdminDashboard() {
 
   const getFilteredRoles = (input) => {
     if (!input) return roles;
-    return roles.filter(role => 
+    return roles.filter(role =>
       role.toLowerCase().includes(input.toLowerCase())
     );
   };
@@ -339,7 +361,7 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard">
       <Toaster position="top-right" />
-      
+
       {/* Header */}
       <header className="admin-header">
         <div className="admin-header-content">
@@ -374,7 +396,7 @@ function AdminDashboard() {
               </svg>
             </div>
             <div className="stat-content">
-              <h3>{users.length}</h3>
+              <h3>{pagination.totalUsers}</h3>
               <p>Total Users</p>
             </div>
           </div>
@@ -444,8 +466,8 @@ function AdminDashboard() {
                     </td>
                     <td>
                       <div className="action-buttons">
-                        <button 
-                          onClick={() => openEditModal(user)} 
+                        <button
+                          onClick={() => openEditModal(user)}
                           className="btn-edit"
                           title="Edit Role"
                         >
@@ -454,8 +476,8 @@ function AdminDashboard() {
                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                           </svg>
                         </button>
-                        <button 
-                          onClick={() => openPasswordModal(user)} 
+                        <button
+                          onClick={() => openPasswordModal(user)}
                           className="btn-password"
                           title="Change Password"
                         >
@@ -464,8 +486,8 @@ function AdminDashboard() {
                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                           </svg>
                         </button>
-                        <button 
-                          onClick={() => handleDeleteUser(user.email)} 
+                        <button
+                          onClick={() => handleDeleteUser(user.email)}
                           className="btn-delete"
                           title="Delete User"
                         >
@@ -484,6 +506,84 @@ function AdminDashboard() {
             </table>
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {pagination.totalPages > 1 && (
+          <div className="pagination-container">
+            <div className="pagination-info">
+              Showing {users.length} of {pagination.totalUsers} users
+            </div>
+            <div className="pagination-controls">
+              <button
+                onClick={() => handlePageChange(1)}
+                disabled={!pagination.hasPrevPage}
+                className="pagination-btn"
+                title="First Page"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="11 17 6 12 11 7"></polyline>
+                  <polyline points="18 17 13 12 18 7"></polyline>
+                </svg>
+              </button>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={!pagination.hasPrevPage}
+                className="pagination-btn"
+                title="Previous Page"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+
+              <div className="pagination-numbers">
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (pagination.totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= pagination.totalPages - 2) {
+                    pageNum = pagination.totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`pagination-num ${currentPage === pageNum ? 'active' : ''}`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={!pagination.hasNextPage}
+                className="pagination-btn"
+                title="Next Page"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+              <button
+                onClick={() => handlePageChange(pagination.totalPages)}
+                disabled={!pagination.hasNextPage}
+                className="pagination-btn"
+                title="Last Page"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="13 17 18 12 13 7"></polyline>
+                  <polyline points="6 17 11 12 6 7"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Add User Modal */}
@@ -554,9 +654,9 @@ function AdminDashboard() {
                 <button type="button" onClick={() => setShowAddModal(false)} className="btn-cancel">
                   Cancel
                 </button>
-                <button 
-                  type="submit" 
-                  className="btn-submit" 
+                <button
+                  type="submit"
+                  className="btn-submit"
                   disabled={isSubmitting}
                   style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
                 >
