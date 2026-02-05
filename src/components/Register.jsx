@@ -17,7 +17,7 @@ const Register = ({ onLogin, onNavigate }) => {
         throw new Error('Please select a job role');
       }
 
-      const response = await fetch('https://redis-jobseeker-backend.onrender.com/api/v1/register', {
+      const response = await fetch('http://localhost:3000/api/v1/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
